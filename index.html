@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +7,63 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(120deg, #f0f4f8, #d9e2ec);
+            position: relative;
+        }
+        .particles {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Permite hacer clic en los elementos por encima */
+        }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.7;
+            background-color: #5c6bc0; /* Color único para las partículas */
+            animation: fall 5s linear infinite;
+            will-change: transform;
+        }
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh);
+            }
+            100% {
+                transform: translateY(100vh);
+            }
         }
         #nueva-tarea {
+            padding: 10px;
+            font-size: 1em;
+            border: 2px solid #5c6bc0;
+            border-radius: 5px;
+            width: calc(100% - 120px);
             margin-bottom: 10px;
+            position: relative; /* Asegura que el input esté por encima de las partículas */
+            z-index: 1; /* Eleva el z-index para que esté en la parte superior */
+        }
+        #nueva-tarea:focus {
+            border-color: #3f51b5;
+            outline: none;
+        }
+        button {
+            padding: 10px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            background-color: #5c6bc0;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            position: relative; /* Asegura que el botón esté por encima de las partículas */
+            z-index: 1; /* Eleva el z-index para que esté en la parte superior */
+        }
+        button:hover {
+            background-color: #3f51b5;
         }
         ul {
             list-style-type: none;
@@ -19,13 +72,27 @@
         li {
             display: flex;
             align-items: center;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            position: relative; /* Asegura que la tarea esté por encima de las partículas */
+            z-index: 1; /* Eleva el z-index para que esté en la parte superior */
         }
         li.completada {
             text-decoration: line-through;
+            background-color: #e0f7fa;
         }
-        button {
-            margin-left: 10px;
+        li:hover {
+            transform: scale(1.02);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            position: relative; /* Asegura que el título esté por encima de las partículas */
+            z-index: 1; /* Eleva el z-index para que esté en la parte superior */
         }
     </style>
 </head>
@@ -35,7 +102,35 @@
     <button id="agregar-tarea">Agregar</button>
     <ul id="lista-tareas"></ul>
 
+    <div class="particles" id="particles-container"></div>
+
     <script>
+        // Función para generar partículas
+        function crearParticulas() {
+            const container = document.getElementById('particles-container');
+            const cantidad = 100; // Total de partículas
+            const columnas = 5; // Número de columnas
+            const columnaAncho = 50; // Ancho de cada columna en píxeles
+
+            for (let i = 0; i < cantidad; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                const size = Math.random() * 3 + 2; // Tamaño aleatorio entre 2 y 5 px
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+
+                // Calcula la posición de la columna
+                const columna = Math.floor(Math.random() * columnas);
+                particle.style.left = `${columna * columnaAncho + columnaAncho / 2}px`; // Posición horizontal
+                particle.style.animationDuration = `${Math.random() * 3 + 3}s`; // Duración de animación aleatoria
+                particle.style.top = `${Math.random() * 100}vh`; // Posición vertical aleatoria
+                container.appendChild(particle);
+            }
+        }
+
+        // Llamar a la función para crear partículas infinitas
+        setInterval(crearParticulas, 1000); // Crear nuevas partículas cada segundo
+
         let tareas = [];
 
         function agregarTarea() {
