@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Tareas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #nueva-tarea {
+            margin-bottom: 10px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        li.completada {
+            text-decoration: line-through;
+        }
+        button {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lista de Tareas</h1>
+    <input type="text" id="nueva-tarea" placeholder="Nueva tarea">
+    <button id="agregar-tarea">Agregar</button>
+    <ul id="lista-tareas"></ul>
+
+    <script>
+        let tareas = [];
+
+        function agregarTarea() {
+            const input = document.getElementById('nueva-tarea');
+            const textoTarea = input.value.trim();
+            if (textoTarea) {
+                tareas.push({ texto: textoTarea, completada: false });
+                input.value = '';
+                actualizarListaTareas();
+            }
+        }
+
+        function eliminarTarea(index) {
+            tareas.splice(index, 1);
+            actualizarListaTareas();
+        }
+
+        function marcarTareaCompletada(index) {
+            tareas[index].completada = !tareas[index].completada;
+            actualizarListaTareas();
+        }
+
+        function actualizarListaTareas() {
+            const lista = document.getElementById('lista-tareas');
+            lista.innerHTML = '';
+            tareas.forEach((tarea, index) => {
+                const li = document.createElement('li');
+                li.className = tarea.completada ? 'completada' : '';
+                li.innerHTML = `
+                    <span>${tarea.texto}</span>
+                    <button onclick="marcarTareaCompletada(${index})">✔</button>
+                    <button onclick="eliminarTarea(${index})">✖</button>
+                `;
+                lista.appendChild(li);
+            });
+        }
+
+        document.getElementById('agregar-tarea').addEventListener('click', agregarTarea);
+        document.getElementById('nueva-tarea').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                agregarTarea();
+            }
+        });
+    </script>
+</body>
+</html>
